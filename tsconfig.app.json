@@ -15,10 +15,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Linting
+       noUnusedLocals/Parameters are off because the vendored shadcn/ui and
+       Animate UI component source under src/components/** legitimately ship
+       unused imports (e.g. `import * as React`). `strict` stays on. */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,

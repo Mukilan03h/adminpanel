@@ -1,6 +1,3 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+// shadcn/ui (new-york) and Animate UI components import the class-name merger
+// from the `cn` package. Re-export it so `@/lib/utils` works everywhere too.
+export { cn } from "cn";
