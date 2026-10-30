@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+/* ------------------------------------------------------------------ *
+ * PeopleHub HRMS — global theme tweaks
+ *
+ * HeroUI v3 is CSS-driven: light/dark are toggled by the `.dark` class
+ * or `data-theme="dark"` on <html>. Here we gently customise the accent
+ * and a couple of tokens so the product has its own identity while still
+ * benefiting from HeroUI's automatic light/dark switching.
+ * ------------------------------------------------------------------ */
+
+:root {
+  /* A slightly richer brand blue than the default accent */
+  --accent: oklch(0.58 0.2 262);
+  --radius: 0.625rem;
+}
+
+.dark,
+[data-theme="dark"] {
+  --accent: oklch(0.68 0.17 262);
+}
+
+/* Smooth, respectful theme transition on the canvas */
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}
+
+/* Make the app fill the viewport */
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* A thin, themed scrollbar for the whole app */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) transparent;
+}
