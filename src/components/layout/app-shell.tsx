@@ -24,7 +24,7 @@ export function AppShell() {
       <AppSidebar />
       <SidebarInset className="flex h-full min-h-0 flex-col overflow-hidden">
         <Topbar />
-        <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
@@ -39,7 +39,7 @@ export function AppShell() {
               </Suspense>
             </motion.div>
           </AnimatePresence>
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

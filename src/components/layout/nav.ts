@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import type { Permission } from "@/lib/rbac";
 import { LayoutDashboard } from "@/components/animate-ui/icons/layout-dashboard";
 import { Users } from "@/components/animate-ui/icons/users";
 import { CalendarCheck } from "@/components/animate-ui/icons/calendar-check";
@@ -8,6 +9,12 @@ import { Rocket } from "@/components/animate-ui/icons/rocket";
 import { TrendingUp } from "@/components/animate-ui/icons/trending-up";
 import { Layers } from "@/components/animate-ui/icons/layers";
 import { Settings } from "@/components/animate-ui/icons/settings";
+import { Kanban } from "@/components/animate-ui/icons/kanban";
+import { NotebookPen } from "@/components/animate-ui/icons/notebook-pen";
+import { CalendarDays } from "@/components/animate-ui/icons/calendar-days";
+import { GraduationCap } from "@/components/animate-ui/icons/graduation-cap";
+import { FileText } from "@/components/animate-ui/icons/file-text";
+import { ShieldCheck } from "@/components/animate-ui/icons/shield-check";
 
 /** Animated icons each have a distinct props union, so store them loosely. */
 export type IconComponent = ComponentType<{
@@ -21,6 +28,8 @@ export type NavItem = {
   to: string;
   icon: IconComponent;
   badge?: string;
+  /** Required permission; undefined means always visible. */
+  perm?: Permission;
 };
 
 export type NavGroup = {
@@ -31,31 +40,40 @@ export type NavGroup = {
 export const navGroups: NavGroup[] = [
   {
     label: "Overview",
+    items: [{ title: "Dashboard", to: "/", icon: LayoutDashboard, perm: "dashboard:view" }],
+  },
+  {
+    label: "People",
     items: [
-      { title: "Dashboard", to: "/", icon: LayoutDashboard },
-      { title: "Employees", to: "/employees", icon: Users, badge: "248" },
+      { title: "Employees", to: "/employees", icon: Users, badge: "248", perm: "employees:view" },
+      { title: "Attendance", to: "/attendance", icon: CalendarCheck, perm: "attendance:view" },
+      { title: "Leave", to: "/leave", icon: Umbrella, badge: "4", perm: "leave:view" },
+      { title: "Payroll", to: "/payroll", icon: Wallet, perm: "payroll:view" },
+      { title: "Performance", to: "/performance", icon: TrendingUp, perm: "performance:view" },
+      { title: "Recruitment", to: "/recruitment", icon: Rocket, perm: "recruitment:view" },
     ],
   },
   {
-    label: "Time & money",
+    label: "Work",
     items: [
-      { title: "Attendance", to: "/attendance", icon: CalendarCheck },
-      { title: "Leave", to: "/leave", icon: Umbrella, badge: "4" },
-      { title: "Payroll", to: "/payroll", icon: Wallet },
+      { title: "Projects", to: "/projects", icon: Kanban, perm: "projects:view" },
+      { title: "Daily Updates", to: "/daily-updates", icon: NotebookPen, perm: "updates:view" },
+      { title: "Meetings", to: "/meetings", icon: CalendarDays, perm: "meetings:view" },
     ],
   },
   {
-    label: "Talent",
+    label: "Talent & docs",
     items: [
-      { title: "Recruitment", to: "/recruitment", icon: Rocket },
-      { title: "Performance", to: "/performance", icon: TrendingUp },
+      { title: "Interns", to: "/interns", icon: GraduationCap, perm: "interns:view" },
+      { title: "Documents", to: "/documents", icon: FileText, perm: "documents:view" },
     ],
   },
   {
-    label: "System",
+    label: "Admin",
     items: [
+      { title: "Access Control", to: "/access-control", icon: ShieldCheck, perm: "rbac:view" },
       { title: "Components", to: "/components", icon: Layers },
-      { title: "Settings", to: "/settings", icon: Settings },
+      { title: "Settings", to: "/settings", icon: Settings, perm: "settings:view" },
     ],
   },
 ];

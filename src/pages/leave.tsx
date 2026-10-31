@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/dialog";
 import { leaveRequests, employeeById, type RequestStatus } from "@/lib/data";
 import { formatDate } from "@/lib/format";
+import { useRbac } from "@/lib/rbac";
 
 const balances = [
   { type: "Vacation", used: 12, total: 25, tone: "[&>div]:bg-info" },
@@ -126,6 +127,9 @@ function RequestLeaveDialog() {
 }
 
 export default function LeavePage() {
+  const { can } = useRbac();
+  const canApprove = can("leave:approve");
+  const canRequest = can("leave:request");
   const [filter, setFilter] = useState<RequestStatus | "All">("Pending");
 
   const requests = useMemo(
@@ -139,7 +143,7 @@ export default function LeavePage() {
         title="Leave management"
         description="Review requests, approve time off and keep an eye on balances."
       >
-        <RequestLeaveDialog />
+        {canRequest && <RequestLeaveDialog />}
       </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -212,7 +216,7 @@ export default function LeavePage() {
                   </div>
 
                   <div className="flex items-center gap-2 sm:w-56 sm:justify-end">
-                    {r.status === "Pending" ? (
+                    {r.status === "Pending" && canApprove ? (
                       <>
                         <Button
                           size="sm"

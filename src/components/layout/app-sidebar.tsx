@@ -25,6 +25,7 @@ import { navGroups } from "@/components/layout/nav";
 import { Sparkles } from "@/components/animate-ui/icons/sparkles";
 import { LogOut } from "@/components/animate-ui/icons/log-out";
 import { PersonAvatar } from "@/components/shared/person-avatar";
+import { useRbac } from "@/lib/rbac";
 import { ChevronsUpDown, BadgeCheck, Bell, CreditCard } from "lucide-react";
 
 function isActivePath(pathname: string, to: string): boolean {
@@ -33,6 +34,14 @@ function isActivePath(pathname: string, to: string): boolean {
 
 export function AppSidebar() {
   const { pathname } = useLocation();
+  const { can, currentUser, currentRole } = useRbac();
+
+  const visibleGroups = navGroups
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((i) => !i.perm || can(i.perm)),
+    }))
+    .filter((g) => g.items.length > 0);
 
   return (
     <Sidebar collapsible="icon" variant="inset">
@@ -49,7 +58,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {navGroups.map((group) => (
+        {visibleGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -84,11 +93,11 @@ export function AppSidebar() {
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  <PersonAvatar name="Priya Nair" hue={280} className="size-8 rounded-lg" />
+                  <PersonAvatar name={currentUser.name} hue={currentUser.hue} className="size-8 rounded-lg" />
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">Priya Nair</span>
+                    <span className="truncate font-medium">{currentUser.name}</span>
                     <span className="truncate text-xs text-muted-foreground">
-                      People Partner
+                      {currentRole.name}
                     </span>
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
@@ -99,8 +108,8 @@ export function AppSidebar() {
                 align="end"
                 className="w-56 rounded-lg"
               >
-                <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  priya.nair@peoplehub.io
+                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                  {currentUser.name.toLowerCase().replace(/[^a-z]+/g, ".")}@peoplehub.io
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>

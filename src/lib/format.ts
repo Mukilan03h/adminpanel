@@ -21,6 +21,26 @@ export function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
+const inr = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+/** Indian Rupee formatting with the Indian digit grouping (lakh/crore). */
+export function formatINR(value: number): string {
+  return inr.format(value);
+}
+
+export function relativeDate(value: string | Date): string {
+  const date = typeof value === "string" ? new Date(value) : value;
+  const diff = Math.round((date.getTime() - Date.now()) / 86_400_000);
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  if (Math.abs(diff) < 1) return "today";
+  if (Math.abs(diff) < 7) return rtf.format(diff, "day");
+  return formatDate(date, { month: "short", day: "numeric" });
+}
+
 export function formatDate(
   value: string | Date,
   opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", year: "numeric" },

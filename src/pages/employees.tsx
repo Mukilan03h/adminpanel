@@ -81,6 +81,7 @@ import {
 } from "@/components/ui/pagination";
 import { departments, employees, type Employee } from "@/lib/data";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { useRbac } from "@/lib/rbac";
 
 const PAGE_SIZE = 7;
 
@@ -182,7 +183,15 @@ function AddEmployeeSheet() {
   );
 }
 
-function RowActions({ employee }: { employee: Employee }) {
+function RowActions({
+  employee,
+  canEdit,
+  canDelete,
+}: {
+  employee: Employee;
+  canEdit: boolean;
+  canDelete: boolean;
+}) {
   return (
     <AlertDialog>
       <DropdownMenu>
@@ -197,18 +206,24 @@ function RowActions({ employee }: { employee: Employee }) {
           <DropdownMenuItem onSelect={() => toast(`Viewing ${employee.name}`)}>
             <Mail className="size-4" /> Message
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => toast(`Editing ${employee.name}`)}>
-            <Pencil className="size-4" /> Edit profile
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <AlertDialogTrigger asChild>
-            <DropdownMenuItem
-              variant="destructive"
-              onSelect={(e) => e.preventDefault()}
-            >
-              <Trash2 className="size-4" /> Offboard
+          {canEdit && (
+            <DropdownMenuItem onSelect={() => toast(`Editing ${employee.name}`)}>
+              <Pencil className="size-4" /> Edit profile
             </DropdownMenuItem>
-          </AlertDialogTrigger>
+          )}
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  <Trash2 className="size-4" /> Offboard
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialogContent>
@@ -237,6 +252,11 @@ function RowActions({ employee }: { employee: Employee }) {
 }
 
 export default function EmployeesPage() {
+  const { can } = useRbac();
+  const canCreate = can("employees:create");
+  const canExport = can("employees:export");
+  const canEdit = can("employees:edit");
+  const canDelete = can("employees:delete");
   const [query, setQuery] = useState("");
   const [dept, setDept] = useState("all");
   const [status, setStatus] = useState("all");
@@ -286,10 +306,12 @@ export default function EmployeesPage() {
         title="Employees"
         description="Manage your organization’s people, roles and employment details."
       >
-        <Button variant="outline" onClick={() => toast("Exported 20 employees to CSV")}>
-          <Download className="size-4" /> Export
-        </Button>
-        <AddEmployeeSheet />
+        {canExport && (
+          <Button variant="outline" onClick={() => toast("Exported 20 employees to CSV")}>
+            <Download className="size-4" /> Export
+          </Button>
+        )}
+        {canCreate && <AddEmployeeSheet />}
       </PageHeader>
 
       <Card className="overflow-hidden py-0">
@@ -434,7 +456,7 @@ export default function EmployeesPage() {
                       {formatDate(e.startDate)}
                     </TableCell>
                     <TableCell>
-                      <RowActions employee={e} />
+                      <RowActions employee={e} canEdit={canEdit} canDelete={canDelete} />
                     </TableCell>
                   </TableRow>
                 );

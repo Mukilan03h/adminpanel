@@ -23,6 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import { candidates, jobOpenings, type CandidateStage } from "@/lib/data";
 import { formatDate, formatNumber } from "@/lib/format";
+import { useRbac } from "@/lib/rbac";
 
 const stages: { key: CandidateStage; tone: string }[] = [
   { key: "Applied", tone: "bg-muted-foreground" },
@@ -54,6 +55,8 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default function RecruitmentPage() {
+  const { can } = useRbac();
+  const canManage = can("recruitment:manage");
   const totalApplicants = jobOpenings.reduce((s, j) => s + j.applicants, 0);
   const interviewing = candidates.filter((c) => c.stage === "Interview").length;
   const offers = candidates.filter((c) => c.stage === "Offer").length;
@@ -64,10 +67,12 @@ export default function RecruitmentPage() {
         title="Recruitment"
         description="Track candidates through your hiring pipeline and manage open roles."
       >
-        <Button onClick={() => toast.success("New role drafted")}>
-          <Plus className="size-4" animateOnHover />
-          Post a role
-        </Button>
+        {canManage && (
+          <Button onClick={() => toast.success("New role drafted")}>
+            <Plus className="size-4" animateOnHover />
+            Post a role
+          </Button>
+        )}
       </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { payroll, employeeById } from "@/lib/data";
 import { formatCurrency } from "@/lib/format";
+import { useRbac } from "@/lib/rbac";
 
 const totals = payroll.reduce(
   (acc, r) => {
@@ -52,6 +53,8 @@ const processed = payroll.filter((r) => r.status === "Processed").length;
 const pending = payroll.filter((r) => r.status !== "Processed").length;
 
 export default function PayrollPage() {
+  const { can } = useRbac();
+  const canRun = can("payroll:run");
   return (
     <>
       <PageHeader
@@ -63,7 +66,7 @@ export default function PayrollPage() {
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button>
+            <Button disabled={!canRun}>
               <Wallet className="size-4" animateOnHover />
               Run payroll
             </Button>

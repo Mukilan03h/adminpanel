@@ -50,6 +50,7 @@ import {
   upcoming,
 } from "@/lib/data";
 import { initials } from "@/lib/format";
+import { useRbac } from "@/lib/rbac";
 
 const headcountConfig = {
   headcount: { label: "Headcount", color: "var(--chart-1)" },
@@ -78,6 +79,7 @@ const attendanceTone: Record<string, string> = {
 };
 
 export default function DashboardPage() {
+  const { can } = useRbac();
   const team = employees.slice(0, 7);
 
   return (
@@ -97,10 +99,12 @@ export default function DashboardPage() {
             <SelectItem value="year">This year</SelectItem>
           </SelectContent>
         </Select>
-        <Button>
-          <Plus className="size-4" animateOnHover />
-          Add employee
-        </Button>
+        {can("employees:create") && (
+          <Button>
+            <Plus className="size-4" animateOnHover />
+            Add employee
+          </Button>
+        )}
       </PageHeader>
 
       {/* KPI row */}

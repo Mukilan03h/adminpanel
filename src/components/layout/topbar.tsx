@@ -21,6 +21,7 @@ import {
 import { Bell } from "@/components/animate-ui/icons/bell";
 import { Search } from "@/components/animate-ui/icons/search";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { UserSwitcher } from "@/components/layout/user-switcher";
 import { titleForPath } from "@/components/layout/nav";
 import { activity } from "@/lib/data";
 import { Kbd } from "@/components/shared/kbd";
@@ -52,6 +53,7 @@ export function Topbar() {
       </Breadcrumb>
 
       <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        <UserSwitcher />
         {/* Search */}
         <button
           type="button"
