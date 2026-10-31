@@ -13,6 +13,8 @@ const PayrollPage = lazy(() => import("@/pages/payroll"));
 const RecruitmentPage = lazy(() => import("@/pages/recruitment"));
 const PerformancePage = lazy(() => import("@/pages/performance"));
 const ProjectsPage = lazy(() => import("@/pages/projects"));
+const WorkloadPage = lazy(() => import("@/pages/workload"));
+const OrgChartPage = lazy(() => import("@/pages/org-chart"));
 const DailyUpdatesPage = lazy(() => import("@/pages/daily-updates"));
 const MeetingsPage = lazy(() => import("@/pages/meetings"));
 const InternsPage = lazy(() => import("@/pages/interns"));
@@ -38,6 +40,8 @@ export default function App() {
         <Route path="/recruitment" element={<Guard perm="recruitment:view"><RecruitmentPage /></Guard>} />
         <Route path="/performance" element={<Guard perm="performance:view"><PerformancePage /></Guard>} />
         <Route path="/projects" element={<Guard perm="projects:view"><ProjectsPage /></Guard>} />
+        <Route path="/workload" element={<Guard perm="projects:view"><WorkloadPage /></Guard>} />
+        <Route path="/org-chart" element={<Guard perm="employees:view"><OrgChartPage /></Guard>} />
         <Route path="/daily-updates" element={<Guard perm="updates:view"><DailyUpdatesPage /></Guard>} />
         <Route path="/meetings" element={<Guard perm="meetings:view"><MeetingsPage /></Guard>} />
         <Route path="/interns" element={<Guard perm="interns:view"><InternsPage /></Guard>} />

@@ -18,7 +18,6 @@ class Intern(Base, IntPKMixin, TimestampMixin):
     mentor: Mapped[str] = mapped_column(String(120), default="")
     start_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
-    stipend_inr: Mapped[int] = mapped_column(Integer, default=0)
     status: Mapped[str] = mapped_column(String(16), default="Active")
     hue: Mapped[int] = mapped_column(Integer, default=30)
 
@@ -52,3 +51,8 @@ class Document(Base, IntPKMixin, TimestampMixin):
     version: Mapped[str] = mapped_column(String(12), default="v1.0")
     updated: Mapped[date | None] = mapped_column(Date, nullable=True)
     size_kb: Mapped[int] = mapped_column(Integer, default=0)
+    # file (uploaded) or link (external URL)
+    source: Mapped[str] = mapped_column(String(8), default="file")
+    file_type: Mapped[str] = mapped_column(String(16), default="FILE")
+    url: Mapped[str] = mapped_column(Text, default="")
+    assigned_to: Mapped[list[str]] = mapped_column(JSON, default=list)

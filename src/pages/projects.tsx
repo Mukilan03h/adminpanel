@@ -239,9 +239,11 @@ function TaskCard({
 
 export default function ProjectsPage() {
   const { projects, tasks, addTask, updateTask } = useStore();
-  const { can } = useRbac();
+  const { can, currentUser } = useRbac();
   const canMove = can("tasks:update") || can("tasks:assign") || can("projects:manage");
   const canCreate = can("tasks:assign") || can("projects:manage");
+  // Interns and individual contributors see only tasks assigned to them.
+  const scopedToSelf = !can("tasks:assign") && !can("projects:manage");
 
   const [projectFilter, setProjectFilter] = useState("all");
 
@@ -255,10 +257,11 @@ export default function ProjectsPage() {
     return [...set].sort();
   }, [projects, tasks]);
 
-  const filteredTasks = useMemo(
-    () => (projectFilter === "all" ? tasks : tasks.filter((t) => t.projectId === projectFilter)),
-    [tasks, projectFilter],
-  );
+  const filteredTasks = useMemo(() => {
+    let list = projectFilter === "all" ? tasks : tasks.filter((t) => t.projectId === projectFilter);
+    if (scopedToSelf) list = list.filter((t) => t.assignee === currentUser.name);
+    return list;
+  }, [tasks, projectFilter, scopedToSelf, currentUser.name]);
 
   const projectName = (id: string) => projects.find((p) => p.id === id)?.name ?? "—";
   const projectHue = (id: string) => projects.find((p) => p.id === id)?.hue ?? 255;

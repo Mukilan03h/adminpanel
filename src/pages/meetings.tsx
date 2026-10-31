@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Users2, CheckSquare, ListChecks, CalendarClock } from "lucide-react";
+import { Plus, Users2, CheckSquare, ListChecks, CalendarClock, Video } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { CalendarDays } from "@/components/animate-ui/icons/calendar-days";
 import { Button } from "@/components/ui/button";
@@ -52,6 +52,7 @@ function ScheduleDialog({ onAdd }: { onAdd: (m: Omit<Meeting, "id">) => void }) 
   const [date, setDate] = useState("2026-11-05");
   const [time, setTime] = useState("10:00");
   const [type, setType] = useState<Meeting["type"]>("Standup");
+  const [link, setLink] = useState("");
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -68,8 +69,9 @@ function ScheduleDialog({ onAdd }: { onAdd: (m: Omit<Meeting, "id">) => void }) 
           onSubmit={(e) => {
             e.preventDefault();
             if (!title.trim()) return;
-            onAdd({ title: title.trim(), date, time, type, attendees: [], agenda: [], minutes: "", decisions: [], actionItems: [], hue: 200 });
+            onAdd({ title: title.trim(), date, time, type, attendees: [], agenda: [], minutes: "", decisions: [], actionItems: [], hue: 200, link: link.trim() || undefined });
             setTitle("");
+            setLink("");
             setOpen(false);
             toast.success("Meeting scheduled");
           }}
@@ -77,6 +79,10 @@ function ScheduleDialog({ onAdd }: { onAdd: (m: Omit<Meeting, "id">) => void }) 
           <div className="grid gap-2">
             <Label htmlFor="m-title">Title</Label>
             <Input id="m-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="m-link">Join link (shared with attendees, incl. interns)</Label>
+            <Input id="m-link" type="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://meet.…" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="grid gap-2">
@@ -179,9 +185,16 @@ export default function MeetingsPage() {
                   <CalendarClock className="size-4" /> {formatDate(selected.date, { weekday: "short", month: "short", day: "numeric" })} · {selected.time}
                 </span>
               </div>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarDays className="size-5 text-primary" /> {selected.title}
-              </CardTitle>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarDays className="size-5 text-primary" /> {selected.title}
+                </CardTitle>
+                {selected.link && (
+                  <Button size="sm" onClick={() => window.open(selected.link, "_blank", "noopener,noreferrer")}>
+                    <Video className="size-4" /> Join
+                  </Button>
+                )}
+              </div>
               {selected.attendees.length > 0 && (
                 <div className="flex items-center gap-3 pt-1">
                   <div className="flex -space-x-2">

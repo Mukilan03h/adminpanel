@@ -47,7 +47,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useRbac } from "@/lib/rbac";
 import { useStore, weightedScore, type Intern } from "@/lib/store";
-import { formatDate, formatINR } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 
 function scoreColor(score: number): string {
   if (score >= 85) return "[&>div]:bg-success";
@@ -206,12 +206,12 @@ export default function InternsPage() {
                         <div className="font-medium">{it.department}</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">Mentor</div>
+                        <div className="text-xs text-muted-foreground">Mentor (Team Lead)</div>
                         <div className="font-medium">{it.mentor}</div>
                       </div>
                       <div>
-                        <div className="text-xs text-muted-foreground">Stipend</div>
-                        <div className="font-medium tabular-nums">{formatINR(it.stipendInr)}/mo</div>
+                        <div className="text-xs text-muted-foreground">Started</div>
+                        <div className="font-medium">{formatDate(it.startDate, { month: "short", day: "numeric" })}</div>
                       </div>
                       <div>
                         <div className="text-xs text-muted-foreground">Ends</div>

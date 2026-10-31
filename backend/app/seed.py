@@ -85,11 +85,11 @@ TASKS = [
 ]
 
 INTERNS = [
-    ("Ishaan Gupta", "IIT Bombay", "Engineering", "Sneha Iyer", "2026-06-02", "2026-12-02", 45000, "Active", 30),
-    ("Diya Sharma", "BITS Pilani", "Engineering", "Rahul Mehta", "2026-07-01", "2026-12-31", 40000, "Active", 200),
-    ("Arjun Reddy", "NIT Trichy", "Product", "Rahul Mehta", "2026-08-15", "2027-02-15", 35000, "Active", 280),
-    ("Meera Krishnan", "VIT Vellore", "Design", "Sneha Iyer", "2026-05-10", "2026-11-10", 30000, "Extended", 320),
-    ("Kabir Shah", "IIIT Hyderabad", "Engineering", "Vikram Singh", "2026-06-20", "2026-12-20", 42000, "Active", 150),
+    ("Ishaan Gupta", "IIT Bombay", "Engineering", "Sneha Iyer", "2026-06-02", "2026-12-02", "Active", 30),
+    ("Diya Sharma", "BITS Pilani", "Engineering", "Rahul Mehta", "2026-07-01", "2026-12-31", "Active", 200),
+    ("Arjun Reddy", "NIT Trichy", "Product", "Rahul Mehta", "2026-08-15", "2027-02-15", "Active", 280),
+    ("Meera Krishnan", "VIT Vellore", "Design", "Sneha Iyer", "2026-05-10", "2026-11-10", "Extended", 320),
+    ("Kabir Shah", "IIIT Hyderabad", "Engineering", "Vikram Singh", "2026-06-20", "2026-12-20", "Active", 150),
 ]
 
 CRITERIA = [
@@ -214,7 +214,8 @@ async def seed() -> None:
                         attendees=["Rahul Mehta", "Sneha Iyer", "Vikram Singh", "Ishaan Gupta"],
                         agenda=["Demo OTP flow", "API status", "Risks"],
                         minutes="Team demoed the OTP flow. Aadhaar integration 70% complete.",
-                        decisions=["Ship OTP flow to staging by Nov 5"], hue=255)
+                        decisions=["Ship OTP flow to staging by Nov 5"], hue=255,
+                        link="https://meet.peoplehub.io/sprint7-review")
             db.add(m)
             await db.flush()
             db.add(ActionItem(meeting_id=m.id, text="Raise credential request with FinServe", owner="Rahul Mehta", due=_d("2026-11-01"), done=True))
@@ -222,9 +223,9 @@ async def seed() -> None:
 
             # Interns + criteria + scores
             intern_rows: list[Intern] = []
-            for name, college, dept, mentor, start, end, stipend, status, hue in INTERNS:
+            for name, college, dept, mentor, start, end, status, hue in INTERNS:
                 it = Intern(name=name, college=college, department=dept, mentor=mentor, start_date=_d(start),
-                            end_date=_d(end), stipend_inr=stipend, status=status, hue=hue)
+                            end_date=_d(end), status=status, hue=hue)
                 db.add(it)
                 intern_rows.append(it)
             crit_rows: list[Criterion] = []
@@ -240,8 +241,13 @@ async def seed() -> None:
 
             # Documents
             for name, cat, owner, roles, status, ver, updated, size in DOCUMENTS:
+                is_link = size == 0
                 db.add(Document(name=name, category=cat, owner=owner, access_roles=roles, status=status,
-                                version=ver, updated=_d(updated), size_kb=size))
+                                version=ver, updated=_d(updated), size_kb=size,
+                                source="link" if is_link else "file",
+                                file_type="Link" if is_link else ("DOCX" if name.lower().endswith("template") else "PDF"),
+                                url="" if is_link else f"#/files/{name[:12]}.pdf",
+                                assigned_to=["Everyone"] if "admin" in roles and "intern" in roles else [owner]))
 
         await db.commit()
     await engine.dispose()

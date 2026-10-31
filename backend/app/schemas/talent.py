@@ -14,7 +14,6 @@ class InternBase(BaseModel):
     mentor: str = ""
     start_date: date | None = None
     end_date: date | None = None
-    stipend_inr: int = 0
     status: str = "Active"
     hue: int = 30
 
@@ -29,7 +28,6 @@ class InternUpdate(BaseModel):
     department: str | None = None
     mentor: str | None = None
     end_date: date | None = None
-    stipend_inr: int | None = None
     status: str | None = None
 
 
@@ -81,6 +79,10 @@ class DocumentBase(BaseModel):
     version: str = "v1.0"
     updated: date | None = None
     size_kb: int = 0
+    source: str = "file"  # "file" | "link"
+    file_type: str = "FILE"
+    url: str = ""
+    assigned_to: list[str] = Field(default_factory=list)
 
 
 class DocumentCreate(DocumentBase):
@@ -93,6 +95,7 @@ class DocumentUpdate(BaseModel):
     access_roles: list[str] | None = None
     status: str | None = None
     version: str | None = None
+    assigned_to: list[str] | None = None
 
 
 class DocumentRead(ORMModel, DocumentBase):

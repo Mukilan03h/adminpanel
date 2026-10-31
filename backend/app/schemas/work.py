@@ -112,6 +112,7 @@ class MeetingBase(BaseModel):
     minutes: str = ""
     decisions: list[str] = Field(default_factory=list)
     hue: int = 200
+    link: str = ""
 
 
 class MeetingCreate(MeetingBase):
@@ -127,6 +128,7 @@ class MeetingUpdate(BaseModel):
     agenda: list[str] | None = None
     minutes: str | None = None
     decisions: list[str] | None = None
+    link: str | None = None
 
 
 class MeetingRead(ORMModel, MeetingBase):

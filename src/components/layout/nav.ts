@@ -15,6 +15,7 @@ import { CalendarDays } from "@/components/animate-ui/icons/calendar-days";
 import { GraduationCap } from "@/components/animate-ui/icons/graduation-cap";
 import { FileText } from "@/components/animate-ui/icons/file-text";
 import { ShieldCheck } from "@/components/animate-ui/icons/shield-check";
+import { ChartColumn } from "@/components/animate-ui/icons/chart-column";
 
 /** Animated icons each have a distinct props union, so store them loosely. */
 export type IconComponent = ComponentType<{
@@ -51,12 +52,14 @@ export const navGroups: NavGroup[] = [
       { title: "Payroll", to: "/payroll", icon: Wallet, perm: "payroll:view" },
       { title: "Performance", to: "/performance", icon: TrendingUp, perm: "performance:view" },
       { title: "Recruitment", to: "/recruitment", icon: Rocket, perm: "recruitment:view" },
+      { title: "Org Chart", to: "/org-chart", icon: Users, perm: "employees:view" },
     ],
   },
   {
     label: "Work",
     items: [
       { title: "Projects", to: "/projects", icon: Kanban, perm: "projects:view" },
+      { title: "Workload", to: "/workload", icon: ChartColumn, perm: "projects:view" },
       { title: "Daily Updates", to: "/daily-updates", icon: NotebookPen, perm: "updates:view" },
       { title: "Meetings", to: "/meetings", icon: CalendarDays, perm: "meetings:view" },
     ],

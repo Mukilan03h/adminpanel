@@ -68,6 +68,8 @@ export type Meeting = {
   decisions: string[];
   actionItems: ActionItem[];
   hue: number;
+  /** Video/join link, visible to and shareable with attendees including interns. */
+  link?: string;
 };
 
 export type Intern = {
@@ -78,7 +80,6 @@ export type Intern = {
   mentor: string;
   startDate: string;
   endDate: string;
-  stipendInr: number;
   status: "Active" | "Completed" | "Extended";
   hue: number;
 };
@@ -95,6 +96,7 @@ export type Criterion = {
 export type Scores = Record<string, Record<string, number>>;
 
 export type DocStatus = "Approved" | "Pending" | "Expired" | "Draft";
+export type DocSource = "file" | "link";
 export type Document = {
   id: string;
   name: string;
@@ -105,6 +107,16 @@ export type Document = {
   version: string;
   updated: string;
   sizeKb: number;
+  /** "file" (uploaded) or "link" (external URL). */
+  source: DocSource;
+  /** File type / extension, e.g. PDF, DOCX, Link. */
+  fileType: string;
+  /** External URL (for link docs) or a stand-in href for uploaded files. */
+  url: string;
+  /** People/teams this document is assigned to (set by Superadmin). */
+  assignedTo: string[];
+  /** Transient object URL for files uploaded this session (not persisted meaningfully). */
+  __blobUrl?: string;
 };
 
 export const TASK_STATUSES: TaskStatus[] = ["Backlog", "To do", "In progress", "In review", "Done"];
@@ -163,6 +175,7 @@ const seedMeetings: Meeting[] = [
     decisions: ["Move 2 engineers to GFA for a week"],
     actionItems: [{ id: "AI-3", text: "Pair on GSTR-1 parser", owner: "Aditi Rao", due: "2026-11-04", done: false }],
     hue: 150,
+    link: "https://meet.peoplehub.io/eng-standup",
   },
   {
     id: "MTG-3", title: "PayBharat — Client Sync", date: "2026-11-03", time: "16:30", type: "Client",
@@ -172,15 +185,16 @@ const seedMeetings: Meeting[] = [
     decisions: [],
     actionItems: [],
     hue: 200,
+    link: "https://meet.peoplehub.io/paybharat-sync",
   },
 ];
 
 const seedInterns: Intern[] = [
-  { id: "INT-01", name: "Ishaan Gupta", college: "IIT Bombay", department: "Engineering", mentor: "Sneha Iyer", startDate: "2026-06-02", endDate: "2026-12-02", stipendInr: 45000, status: "Active", hue: 30 },
-  { id: "INT-02", name: "Diya Sharma", college: "BITS Pilani", department: "Engineering", mentor: "Rahul Mehta", startDate: "2026-07-01", endDate: "2026-12-31", stipendInr: 40000, status: "Active", hue: 200 },
-  { id: "INT-03", name: "Arjun Reddy", college: "NIT Trichy", department: "Product", mentor: "Rahul Mehta", startDate: "2026-08-15", endDate: "2027-02-15", stipendInr: 35000, status: "Active", hue: 280 },
-  { id: "INT-04", name: "Meera Krishnan", college: "VIT Vellore", department: "Design", mentor: "Sneha Iyer", startDate: "2026-05-10", endDate: "2026-11-10", stipendInr: 30000, status: "Extended", hue: 320 },
-  { id: "INT-05", name: "Kabir Shah", college: "IIIT Hyderabad", department: "Engineering", mentor: "Vikram Singh", startDate: "2026-06-20", endDate: "2026-12-20", stipendInr: 42000, status: "Active", hue: 150 },
+  { id: "INT-01", name: "Ishaan Gupta", college: "IIT Bombay", department: "Engineering", mentor: "Sneha Iyer", startDate: "2026-06-02", endDate: "2026-12-02", status: "Active", hue: 30 },
+  { id: "INT-02", name: "Diya Sharma", college: "BITS Pilani", department: "Engineering", mentor: "Rahul Mehta", startDate: "2026-07-01", endDate: "2026-12-31", status: "Active", hue: 200 },
+  { id: "INT-03", name: "Arjun Reddy", college: "NIT Trichy", department: "Product", mentor: "Rahul Mehta", startDate: "2026-08-15", endDate: "2027-02-15", status: "Active", hue: 280 },
+  { id: "INT-04", name: "Meera Krishnan", college: "VIT Vellore", department: "Design", mentor: "Sneha Iyer", startDate: "2026-05-10", endDate: "2026-11-10", status: "Extended", hue: 320 },
+  { id: "INT-05", name: "Kabir Shah", college: "IIIT Hyderabad", department: "Engineering", mentor: "Vikram Singh", startDate: "2026-06-20", endDate: "2026-12-20", status: "Active", hue: 150 },
 ];
 
 const seedCriteria: Criterion[] = [
@@ -200,14 +214,14 @@ const seedScores: Scores = {
 };
 
 const seedDocuments: Document[] = [
-  { id: "DOC-1", name: "Employee Handbook 2026", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "pm", "lead", "employee", "intern"], status: "Approved", version: "v3.2", updated: "2026-09-01", sizeKb: 1840 },
-  { id: "DOC-2", name: "Leave & Attendance Policy (India)", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "pm", "lead", "employee", "intern"], status: "Approved", version: "v2.0", updated: "2026-08-12", sizeKb: 640 },
-  { id: "DOC-3", name: "Master Services Agreement — FinServe", category: "Contract", owner: "Ananya Rao", accessRoles: ["admin", "hr", "pm"], status: "Approved", version: "v1.0", updated: "2026-07-20", sizeKb: 2210 },
-  { id: "DOC-4", name: "Intern Offer — Ishaan Gupta", category: "Intern", owner: "Priya Nair", accessRoles: ["admin", "hr"], status: "Approved", version: "v1.0", updated: "2026-05-28", sizeKb: 320 },
-  { id: "DOC-5", name: "Intern NDA — Diya Sharma", category: "Intern", owner: "Priya Nair", accessRoles: ["admin", "hr"], status: "Pending", version: "v1.0", updated: "2026-10-20", sizeKb: 290 },
-  { id: "DOC-6", name: "Q3 Financial Report", category: "Finance", owner: "Ethan Brown", accessRoles: ["admin", "hr"], status: "Approved", version: "v1.1", updated: "2026-10-05", sizeKb: 980 },
-  { id: "DOC-7", name: "Sprint Review Template", category: "Template", owner: "Rahul Mehta", accessRoles: ["admin", "hr", "pm", "lead"], status: "Draft", version: "v0.9", updated: "2026-10-18", sizeKb: 120 },
-  { id: "DOC-8", name: "PF & Gratuity Guidelines", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "employee"], status: "Expired", version: "v1.4", updated: "2025-04-01", sizeKb: 410 },
+  { id: "DOC-1", name: "Employee Handbook 2026", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "pm", "lead", "employee", "intern"], status: "Approved", version: "v3.2", updated: "2026-09-01", sizeKb: 1840, source: "file", fileType: "PDF", url: "#/files/handbook-2026.pdf", assignedTo: ["Everyone"] },
+  { id: "DOC-2", name: "Leave & Attendance Policy (India)", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "pm", "lead", "employee", "intern"], status: "Approved", version: "v2.0", updated: "2026-08-12", sizeKb: 640, source: "file", fileType: "PDF", url: "#/files/leave-policy.pdf", assignedTo: ["Everyone"] },
+  { id: "DOC-3", name: "Master Services Agreement — FinServe", category: "Contract", owner: "Ananya Rao", accessRoles: ["admin", "hr", "pm"], status: "Approved", version: "v1.0", updated: "2026-07-20", sizeKb: 2210, source: "file", fileType: "PDF", url: "#/files/msa-finserve.pdf", assignedTo: ["Rahul Mehta"] },
+  { id: "DOC-4", name: "Intern Offer — Ishaan Gupta", category: "Intern", owner: "Priya Nair", accessRoles: ["admin", "hr"], status: "Approved", version: "v1.0", updated: "2026-05-28", sizeKb: 320, source: "file", fileType: "DOCX", url: "#/files/offer-ishaan.docx", assignedTo: ["Ishaan Gupta"] },
+  { id: "DOC-5", name: "Intern NDA — Diya Sharma", category: "Intern", owner: "Priya Nair", accessRoles: ["admin", "hr"], status: "Pending", version: "v1.0", updated: "2026-10-20", sizeKb: 290, source: "file", fileType: "PDF", url: "#/files/nda-diya.pdf", assignedTo: ["Diya Sharma"] },
+  { id: "DOC-6", name: "Engineering Wiki", category: "Template", owner: "Rahul Mehta", accessRoles: ["admin", "hr", "pm", "lead", "employee", "intern"], status: "Approved", version: "—", updated: "2026-10-22", sizeKb: 0, source: "link", fileType: "Link", url: "https://wiki.peoplehub.io/engineering", assignedTo: ["Engineering"] },
+  { id: "DOC-7", name: "Sprint Review Template", category: "Template", owner: "Rahul Mehta", accessRoles: ["admin", "hr", "pm", "lead"], status: "Draft", version: "v0.9", updated: "2026-10-18", sizeKb: 120, source: "file", fileType: "DOCX", url: "#/files/sprint-template.docx", assignedTo: ["Team Leads"] },
+  { id: "DOC-8", name: "PF & Gratuity Guidelines", category: "Policy", owner: "Priya Nair", accessRoles: ["admin", "hr", "employee"], status: "Expired", version: "v1.4", updated: "2025-04-01", sizeKb: 410, source: "file", fileType: "PDF", url: "#/files/pf-gratuity.pdf", assignedTo: ["Everyone"] },
 ];
 
 /* ----------------------------- store ----------------------------- */

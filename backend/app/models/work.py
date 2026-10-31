@@ -69,6 +69,7 @@ class Meeting(Base, IntPKMixin, TimestampMixin):
     minutes: Mapped[str] = mapped_column(Text, default="")
     decisions: Mapped[list[str]] = mapped_column(JSON, default=list)
     hue: Mapped[int] = mapped_column(Integer, default=200)
+    link: Mapped[str] = mapped_column(Text, default="")
 
     action_items: Mapped[list["ActionItem"]] = relationship(
         back_populates="meeting", cascade="all, delete-orphan", lazy="selectin"
