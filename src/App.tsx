@@ -1,15 +1,17 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { AppShell } from "@/components/layout/app-shell";
-import DashboardPage from "@/pages/dashboard";
-import EmployeesPage from "@/pages/employees";
-import AttendancePage from "@/pages/attendance";
-import LeavePage from "@/pages/leave";
-import PayrollPage from "@/pages/payroll";
-import RecruitmentPage from "@/pages/recruitment";
-import PerformancePage from "@/pages/performance";
-import SettingsPage from "@/pages/settings";
-import ComponentsPage from "@/pages/components";
-import NotFoundPage from "@/pages/not-found";
+
+const DashboardPage = lazy(() => import("@/pages/dashboard"));
+const EmployeesPage = lazy(() => import("@/pages/employees"));
+const AttendancePage = lazy(() => import("@/pages/attendance"));
+const LeavePage = lazy(() => import("@/pages/leave"));
+const PayrollPage = lazy(() => import("@/pages/payroll"));
+const RecruitmentPage = lazy(() => import("@/pages/recruitment"));
+const PerformancePage = lazy(() => import("@/pages/performance"));
+const SettingsPage = lazy(() => import("@/pages/settings"));
+const ComponentsPage = lazy(() => import("@/pages/components"));
+const NotFoundPage = lazy(() => import("@/pages/not-found"));
 
 export default function App() {
   return (
