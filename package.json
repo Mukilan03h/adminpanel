@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@animate-ui/react": "^2.4.1",
+    "@dicebear/collection": "^9.4.2",
+    "@dicebear/core": "^9.4.3",
     "@floating-ui/react": "^0.27.20",
     "@internationalized/date": "^3.12.4",
     "class-variance-authority": "^0.7.1",

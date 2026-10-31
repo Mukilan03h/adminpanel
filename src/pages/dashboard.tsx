@@ -9,7 +9,9 @@ import {
   PieChart,
   XAxis,
 } from "recharts";
+import { motion } from "motion/react";
 import { AvatarGroup, AvatarGroupTooltip } from "@animate-ui/react/primitives/avatar-group";
+import { StarsBackground } from "@/components/animate-ui/backgrounds/stars";
 import {
   Card,
   CardContent,
@@ -84,28 +86,42 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        title="Good morning, Priya 👋"
-        description="Here’s what’s happening across your organization today, Friday, October 30."
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-chart-2 to-chart-5 p-6 text-white shadow-lg shadow-primary/20"
       >
-        <Select defaultValue="30d">
-          <SelectTrigger className="w-[150px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="qtr">This quarter</SelectItem>
-            <SelectItem value="year">This year</SelectItem>
-          </SelectContent>
-        </Select>
-        {can("employees:create") && (
-          <Button>
-            <Plus className="size-4" animateOnHover />
-            Add employee
-          </Button>
-        )}
-      </PageHeader>
+        <StarsBackground className="absolute inset-0 opacity-50" />
+        <div className="pointer-events-none absolute -top-10 -right-10 size-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-semibold tracking-tight">Good morning, Priya 👋</h1>
+            <p className="max-w-xl text-sm text-white/85">
+              Here’s what’s happening across your organization today, Friday, October 30.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Select defaultValue="30d">
+              <SelectTrigger className="w-[150px] border-white/25 bg-white/15 text-white backdrop-blur hover:bg-white/25">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="qtr">This quarter</SelectItem>
+                <SelectItem value="year">This year</SelectItem>
+              </SelectContent>
+            </Select>
+            {can("employees:create") && (
+              <Button className="bg-white text-primary hover:bg-white/90 hover:brightness-100">
+                <Plus className="size-4" animateOnHover />
+                Add employee
+              </Button>
+            )}
+          </div>
+        </div>
+      </motion.div>
 
       {/* KPI row */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

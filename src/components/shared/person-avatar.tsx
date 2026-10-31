@@ -1,6 +1,7 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { initials } from "@/lib/format";
+import { avatarUri } from "@/lib/avatar";
 
 type PersonAvatarProps = {
   name: string;
@@ -9,12 +10,13 @@ type PersonAvatarProps = {
 };
 
 /**
- * A deterministic, network-free avatar: colored initials derived from the
- * person's name (and optional hue). Keeps the demo stable offline.
+ * Premium, deterministic, network-free avatar: a seeded DiceBear illustration
+ * on a hue-tinted gradient, with initials as the fallback.
  */
 export function PersonAvatar({ name, hue = 255, className }: PersonAvatarProps) {
   return (
-    <Avatar className={cn("size-9", className)}>
+    <Avatar className={cn("size-9 ring-2 ring-background shadow-sm", className)}>
+      <AvatarImage src={avatarUri(name, hue)} alt={name} />
       <AvatarFallback
         className="font-medium text-white"
         style={{

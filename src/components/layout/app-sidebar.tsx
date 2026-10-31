@@ -47,11 +47,13 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <div className="flex items-center gap-2.5 px-1.5 py-1.5">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-chart-2 text-primary-foreground shadow-md shadow-primary/30 ring-1 ring-white/20">
             <Sparkles className="size-5" animateOnHover />
           </div>
           <div className="grid flex-1 leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate text-sm font-semibold">PeopleHub</span>
+            <span className="truncate bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-sm font-bold text-transparent">
+              PeopleHub
+            </span>
             <span className="truncate text-xs text-muted-foreground">HRMS Suite</span>
           </div>
         </div>
@@ -68,7 +70,12 @@ export function AppSidebar() {
                   const Icon = item.icon;
                   return (
                     <SidebarMenuItem key={item.to}>
-                      <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={active}
+                        tooltip={item.title}
+                        className="relative transition-colors data-[active=true]:bg-gradient-to-r data-[active=true]:from-primary/15 data-[active=true]:to-primary/0 data-[active=true]:font-medium data-[active=true]:text-primary data-[active=true]:before:absolute data-[active=true]:before:top-1.5 data-[active=true]:before:bottom-1.5 data-[active=true]:before:left-0 data-[active=true]:before:w-0.5 data-[active=true]:before:rounded-full data-[active=true]:before:bg-primary"
+                      >
                         <NavLink to={item.to}>
                           <Icon className="size-4 shrink-0" animateOnHover />
                           <span>{item.title}</span>
