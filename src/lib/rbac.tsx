@@ -291,7 +291,7 @@ export const USERS: AppUser[] = [
   { id: "u-intern", name: "Ishaan Gupta", title: "Engineering Intern", roleId: "intern", hue: 30 },
 ];
 
-type RbacState = {
+export type RbacState = {
   roles: Role[];
   users: AppUser[];
   currentUser: AppUser;
@@ -306,7 +306,7 @@ type RbacState = {
   deleteRole: (roleId: string) => void;
 };
 
-const RbacContext = createContext<RbacState | null>(null);
+export const RbacContext = createContext<RbacState | null>(null);
 
 const ROLES_KEY = "peoplehub-roles";
 const ASSIGN_KEY = "peoplehub-assignments";

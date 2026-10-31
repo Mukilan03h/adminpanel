@@ -1,4 +1,4 @@
-import { UserCog, Check } from "lucide-react";
+import { UserCog, Check, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PersonAvatar } from "@/components/shared/person-avatar";
@@ -11,14 +11,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRbac } from "@/lib/rbac";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 /**
- * "Viewing as" impersonation control. Switching the active user changes the
- * user's role, which re-gates the whole UI — the clearest way to demo RBAC.
+ * Connected mode: a profile + logout menu. Demo mode: a "Viewing as"
+ * impersonation control that re-gates the whole UI (the clearest RBAC demo).
  */
 export function UserSwitcher() {
   const { users, roles, currentUser, currentRole, setCurrentUser } = useRbac();
+  const { mode, logout } = useAuth();
+
+  if (mode === "connected") {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className="gap-2">
+            <PersonAvatar name={currentUser.name} hue={currentUser.hue} className="size-6" />
+            <Badge variant="secondary" className="font-medium" style={{ color: `oklch(0.6 0.17 ${currentRole.hue})` }}>
+              {currentRole.name}
+            </Badge>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuLabel className="font-normal">
+            <div className="font-medium">{currentUser.name}</div>
+            <div className="text-xs text-muted-foreground">{currentRole.name}</div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onSelect={() => void logout()}>
+            <LogOut className="size-4" /> Sign out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
   return (
     <DropdownMenu>

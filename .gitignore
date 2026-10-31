@@ -30,3 +30,6 @@ dist-ssr
 # TS build info
 *.tsbuildinfo
 node_modules/.tmp
+
+# local env
+.env
