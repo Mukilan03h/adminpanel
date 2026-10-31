@@ -24,11 +24,19 @@ project management (INR, Indian colleges, local roles).
 
 ### Work platform
 - **Projects** — project cards, **kanban board + list views**, create/move tasks (Framer Motion),
-  priorities, assignees, due dates.
+  priorities, assignees, due dates. **Interns & individual contributors see only their own tasks**;
+  leads/PMs see everything.
+- **Team Workload** — a capacity board showing **who is working on what and who is free**
+  (Busy / Queued / Free), per-person load, and quick **assign work** to available people.
 - **Daily Updates** — ClickUp-style standup tracker grouped by date, with blockers and hours;
   "view all" vs "view own" depending on role.
 - **Meetings & Minutes** — master-detail with agenda, attendees, editable **minutes of meeting**,
-  decisions and **action items** you can tick off.
+  decisions, **action items**, and a **join link** shared with attendees (including interns).
+
+### Org & HR automation
+- **Organization chart** derived from roles and intern mentors (interns report to their team leads).
+- **Résumé upload (HR)** — OCR/AI-style **prefill** of a candidate (name, email, phone, role, skills)
+  so HR reviews instead of retyping; **auto-generated company employee IDs**.
 
 ### Talent & documents
 - **Interns** — INR stipends, Indian colleges and mentors; an **HR/manager-defined weighted scoring
@@ -53,6 +61,22 @@ project management (INR, Indian colleges, local roles).
 - **Light / dark / system** theme with Animate UI's view-transition **theme wipe**.
 - **Static app shell**: the sidebar and top bar stay fixed; only the content area scrolls.
 - Route-level **code splitting** for fast loads.
+
+## Backend (optional, production-grade)
+
+A full **FastAPI + PostgreSQL** API lives in [`backend/`](backend/README.md): email/password auth
+with **Argon2**, **JWT** access + rotating refresh tokens, **MFA** (TOTP + backup codes + email OTP),
+server-enforced **RBAC**, Alembic migrations, Docker, and a passing pytest suite.
+
+- **Demo mode** (default): leave `VITE_API_URL` unset — the app runs standalone on local mock data
+  with a persona switcher.
+- **Connected mode**: set `VITE_API_URL` (e.g. `http://localhost:8000`) — the app shows a real
+  **login + MFA** screen and drives permissions/roles from the backend.
+
+```bash
+cd backend && make install && make migrate && make seed && make run   # API on :8000
+# then, in the web app:  VITE_API_URL=http://localhost:8000 npm run dev
+```
 
 ## Tech stack
 
